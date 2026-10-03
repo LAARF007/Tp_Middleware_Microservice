@@ -1,0 +1,57 @@
+{
+  "nats_url": "nats://localhost:4222",
+  "port": 8082,
+  "backend": "openai",
+  "backend_base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+  "min_interval_s": 5,
+  "tags": [ 
+    "ai",
+    "cloud",
+    "security",
+    "frontend",
+    "backend",
+    "data",
+    "devops",
+    "mobile",
+    "hardware",
+    "language",
+    "open-source",
+    "other"
+  ],
+  "categories": [
+    "news",
+    "release",
+    "tutorial",
+    "analysis",
+    "research",
+    "incident"
+  ],
+  "llm_response_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://edu.forestier.re/m2/veille/llm.response.schema.json",
+    "title": "LlmAnalysis",
+    "description": "What the analyzer asks the LLM to return.",
+    "type": "object",
+    "properties": {
+      "summary": {
+        "type": "string"
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1,
+        "maxItems": 3
+      },
+      "category": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "summary",
+      "tags",
+      "category"
+    ]
+  }
+}

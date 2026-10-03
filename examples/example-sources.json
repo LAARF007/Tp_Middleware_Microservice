@@ -1,0 +1,29 @@
+{
+  "sources": [
+    { "id": "devto",       "name": "DEV Community",          "url": "https://dev.to/feed",
+      "format": "rss2", "lang": "en", "poll_interval_s": 1800, "enabled": true },
+    { "id": "infoq",       "name": "InfoQ",                  "url": "https://feed.infoq.com/",
+      "format": "rss2", "lang": "en", "poll_interval_s": 1800, "enabled": true },
+    { "id": "githubblog",  "name": "GitHub Blog",            "url": "https://github.blog/feed/",
+      "format": "rss2", "lang": "en", "poll_interval_s": 3600, "enabled": true },
+    { "id": "arstechnica", "name": "Ars Technica",           "url": "https://feeds.arstechnica.com/arstechnica/technology-lab",
+      "format": "rss2", "lang": "en", "poll_interval_s": 1800, "enabled": true },
+    { "id": "phoronix",    "name": "Phoronix",               "url": "https://www.phoronix.com/rss.php",
+      "format": "rss2", "lang": "en", "poll_interval_s": 1800, "enabled": true },
+    { "id": "theregister", "name": "The Register",           "url": "https://www.theregister.com/headlines.atom",
+      "format": "atom", "lang": "en", "poll_interval_s": 1800, "enabled": true },
+
+    { "id": "linuxfr",     "name": "LinuxFr.org",            "url": "https://linuxfr.org/news.atom",
+      "format": "atom", "lang": "fr", "poll_interval_s": 1800, "enabled": true },
+    { "id": "nextink",     "name": "Next.ink (articles libres)", "url": "https://next.ink/feed/free/",
+      "format": "rss2", "lang": "fr", "poll_interval_s": 1800, "enabled": true },
+    { "id": "korben",      "name": "Korben",                 "url": "https://korben.info/feed",
+      "format": "rss2", "lang": "fr", "poll_interval_s": 1800, "enabled": true },
+    { "id": "developpez",  "name": "Developpez.com",         "url": "https://www.developpez.com/index/rss",
+      "format": "rss2", "lang": "fr", "poll_interval_s": 1800, "enabled": true },
+    { "id": "silicon",     "name": "Silicon.fr",             "url": "https://www.silicon.fr/feed",
+      "format": "rss2", "lang": "fr", "poll_interval_s": 1800, "enabled": true },
+    { "id": "zdnetfr",     "name": "ZDNet France",           "url": "https://www.zdnet.fr/feeds/rss/actualites/",
+      "format": "rss2", "lang": "fr", "poll_interval_s": 1800, "enabled": true }
+  ]
+}

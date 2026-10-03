@@ -1,0 +1,14 @@
+{
+  "schema_version": "v1",
+  "id": "7c84a835-8101-5c5b-b09e-0a9b7797d0e4",
+  "source_id": "0049753e-8950-4797-b878-92a38c9933ce",
+  "source_name": "GitHub Blog",
+  "url": "https://github.blog/ai-and-ml/github-copilot/project-hydrafusion-frontier-quality-via-multi-model-orchestration/",
+  "canonical_url": "https://github.blog/ai-and-ml/github-copilot/project-hydrafusion-frontier-quality-via-multi-model-orchestration/",
+  "title": "Project HydraFusion: Frontier quality via multi-model orchestration",
+  "author": "GitHub Staff",
+  "published_at": "2026-09-04T16:04:14Z",
+  "fetched_at": "2026-09-06T18:40:54Z",
+  "content_excerpt": "Providing developers the best model for the task at hand has always been our goal. Earlier this year, we made that easier by launching Auto model selection, which reviews your task and matches it to the best-suited model for that task. Today, we’re introducing Project HydraFusion, a research preview that delivers frontier intelligence through runtime orchestration. It creates a full execution plan, choosing from models across multiple providers to draft, critique and revise, or cascade to more powerful models to complete your task. HydraFusion fills a key role in our overall strategy to deliver automated semantic routing between local, cloud, and compound models. For developers, that complexity stays behind the scenes: you select HydraFusion like any other model, and it chooses a workflow that balances performance, cost, and latency for each task. Now available as a research preview HydraFusion is available to users on all GitHub Copilot plans through /experimental in GitHub Copilot CLI . Usage is based on the tokens consumed by the models HydraFusion uses, priced at each model’s standard rate . To try HydraFusion in Copilot CLI: Run /update to install the latest version Run /experimental on Run /model , then select HydraFusion (Research Preview) Please post feedback in the GitHub Community . HydraFusion treats workflow selection as an optimization problem. It uses capability signals for reasoning, code generation, debugging, and tool use to select the most efficient execution pattern to meet the quality bar. For each request, HydraFusion currently chooses one of three execution patterns: Single. One selected model solves the task directly. Cascade. An efficient model drafts a solution and a quality gate decides whether to accept it or escalate to a stronger model. Critique. One model drafts a result, an independent read-only critic from a different model family reviews it (following the same review pattern as Rubber Duck ), and the drafting model revises once. Figu",
+  "lang": "en"
+}
