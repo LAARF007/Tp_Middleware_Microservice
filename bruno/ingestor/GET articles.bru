@@ -1,0 +1,16 @@
+meta {
+  name: GET articles
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{ingestor}}/articles
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

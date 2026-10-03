@@ -1,0 +1,16 @@
+meta {
+  name: GET sources id
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{ingestor}}/sources/{{ingestor_source_id}}
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,6 +1,8 @@
 # profiles : prepare (nats, mailpit), ollama (Ollama), services (all 5 services)
+#   docker compose --profile prepare up -d 
 #   docker compose --profile services build       
 #   docker compose --profile services up       
+#   docker compose --profile services down
 
 # specifics for ollama:  
 #   docker compose exec ollama ollama pull llama3.2:1b

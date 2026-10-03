@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "middleware_m2_2026",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

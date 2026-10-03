@@ -1,0 +1,26 @@
+meta {
+  name: POST subscriptions discord
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{notifier_go}}/subscriptions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "channel": "discord",
+    "enabled": true,
+    "include_degraded": true,
+    "label": "Test discord",
+    "target": "https://discord.com/api/webhooks/..."
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

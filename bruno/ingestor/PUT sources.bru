@@ -1,0 +1,28 @@
+meta {
+  name: PUT sources
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{ingestor}}/sources/{{ingestor_source_id}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "name": "Next.ink (articles libres)",
+      "url": "https://next.ink/feed/free/",
+      "format": "rss2",
+      "lang": "fr",
+      "poll_interval_s": 1800,
+      "enabled": true,
+      "start_poll_at": "2026-09-23T10:01:31Z"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

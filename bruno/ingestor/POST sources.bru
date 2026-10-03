@@ -1,0 +1,32 @@
+meta {
+  name: POST sources
+  type: http
+  seq: 5
+}
+
+post {
+  url: "id": "nextink",
+    "id": "nextink",
+    "id": "nextink",
+    "id": "nextink",
+{{ingestor}}/sources
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "name": "nextink",
+      "url": "https://next.ink/feed/free/",
+      "format": "rss2",
+      "lang": "fr",
+      "poll_interval_s": 1800,
+      "enabled": true,
+      "start_poll_at": "2026-10-03T10:01:31Z"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
