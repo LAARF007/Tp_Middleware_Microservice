@@ -1,0 +1,111 @@
+meta {
+  name: chat completion
+  type: http
+  seq: 1
+}
+
+post {
+  url: https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: ...
+}
+
+body:json {
+  {
+    "model": "gemini-3.5-flash-lite",
+    "temperature": 0,
+    "max_completion_tokens": 220,
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a technology-watch assistant."
+      },
+      {
+        "role": "user",
+        "content": "Article title: {{title}} \nArticle text:\n{{body}}\nTasks:\n1. summary: use 50 words maximum. Plain text.\n2. tags: pick one to three tag\n3. category: pick one"
+      }
+    ],
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "article_analysis",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "$id": "https://edu.forestier.re/m2/veille/llm.response.schema.json",
+          "title": "LlmAnalysis",
+          "description": "What the analyzer asks the LLM to return.",
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ai",
+                  "cloud",
+                  "security",
+                  "frontend",
+                  "backend",
+                  "data",
+                  "devops",
+                  "mobile",
+                  "hardware",
+                  "language",
+                  "open-source",
+                  "other"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 3
+            },
+            "category": {
+              "type": "string",
+              "enum": [
+                "news",
+                "release",
+                "tutorial",
+                "analysis",
+                "research",
+                "incident"
+              ]
+            }
+          },
+          "required": [
+            "summary",
+            "tags",
+            "category"
+          ]
+        }
+      }
+    }
+  }
+}
+
+vars:pre-request {
+  title: How to Run a Free AI Coding Assistant Locally with VS Code, opencode, and LM Studio
+  body: Every AI coding assistant wants your credit card. And your code. There's a third option, and it costs nothing: run the whole thing on your own computer. No subscription. No internet. Your code never leaves your machine. I set this up on a fairly ordinary PC, and it works. Here's exactly how. What you're building Three pieces working together: LM Studio — runs the AI model on your PC. This is the engine. opencode — the coding assistant that reads and edits your files. VS Code — where you actually write code. LM Studio does the thinking. opencode does the work. VS Code is where you sit. My setup: Windows, RTX 3070 Ti with 8GB VRAM, 16GB RAM. That's a mid-range gaming PC, not a workstation. If yours is similar, you're fine. Step 1: Install LM Studio Download it from lmstudio.ai and install it like any normal app. LM Studio lets you download and run open-source AI models directly on your computer. It's the easiest way into local AI — no command line required. Step 2: Download the model Open the search inside LM Studio and look for qwen3 8b . You'll see a lot of versions. Check these three things before you download: Format: GGUF Quantization: Q4_K_M Capabilities: "tool use" must be listed Why those matter, in plain English: Quantization is compression. Q4_K_M shrinks the model so it fits on a smaller graphics card. You lose a little quality, but you gain the ability to actually run it. Tool use is non-negotiable. A coding assistant needs to open your files and edit them. A model without tool use can only chat about your code — it can't touch it. Skip this check and nothing will work later. Got different hardware? Pick a model that fits it. Bigger models are smarter but hungrier. An 8B model is a comfortable fit for 8GB of VRAM. Once the download finishes, your model shows up under My Models . Step 3: Load the model Go to the Developer tab and select your model. Turn on "Manually choose model load parameters" , then click the small arrow next to the model name to open th
+}
+
+script:pre-request {
+  
+  function escapeForJsonString(rawText) {
+    const quotedJsonString = JSON.stringify(rawText);
+    // JSON.stringify adds surrounding quotes; the template already has them
+    return quotedJsonString.slice(1, -1);
+  }
+  
+  bru.setVar("title", escapeForJsonString(bru.getRequestVar("title")));
+  bru.setVar("body", escapeForJsonString(bru.getRequestVar("body")));    
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

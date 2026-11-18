@@ -1,0 +1,26 @@
+meta {
+  name: POST subscriptions mail
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{notifier_go}}/subscriptions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "channel": "mail",
+    "enabled": true,
+    "include_degraded": true,
+    "label": "Test mail",
+    "target": "test@kkdansdesraviolis.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,2 @@
+# The build context is this directory. What is here is not needed to compile or run the service.
+*.db

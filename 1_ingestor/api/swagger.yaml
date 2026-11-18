@@ -1,0 +1,210 @@
+basePath: /
+definitions:
+  models.IngestedArticle:
+    properties:
+      canonical_url:
+        type: string
+      first_seen_at:
+        example: "2026-09-13T15:07:02Z"
+        format: date-time
+        type: string
+      id:
+        type: string
+      source_id:
+        type: string
+      url:
+        type: string
+    type: object
+  models.Problem:
+    properties:
+      detail:
+        description: what went wrong
+        type: string
+      status:
+        description: same number as the HTTP status code
+        type: integer
+      title:
+        description: standard phrase of the status, e.g. "Not Found"
+        type: string
+      type:
+        description: always "about:blank" in this TP
+        type: string
+    type: object
+  models.Source:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      url:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: |-
+    Ingestor of the technology-watch pipeline: polls RSS/Atom feeds and publishes
+    every new article on the NATS subject ARTICLES.ingested.
+    Errors follow RFC 9457 (application/problem+json), see contracts/http-errors.md.
+  title: middleware/ingestor
+  version: 1.0.0
+paths:
+  /articles:
+    get:
+      description: |-
+        What the ingestor has published on ARTICLES.ingested, most recent first: id,
+        urls, source and date only. The content travels in the NATS message.
+      parameters:
+      - description: Only the articles of this source (uuid)
+        in: query
+        name: source_id
+        type: string
+      - description: How many articles; all of them when left out
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.IngestedArticle'
+            type: array
+        "422":
+          description: limit is not a number of 1 or more
+          schema:
+            $ref: '#/definitions/models.Problem'
+        "500":
+          description: Something went wrong
+          schema:
+            $ref: '#/definitions/models.Problem'
+      summary: Get the latest ingested articles.
+      tags:
+      - articles
+  /articles/{id}:
+    get:
+      description: Whether the ingestor has published this article, and from which
+        source, when.
+      parameters:
+      - description: Article UUID (v5 of its canonical URL)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.IngestedArticle'
+        "404":
+          description: Article not found
+          schema:
+            $ref: '#/definitions/models.Problem'
+        "422":
+          description: Cannot parse id
+          schema:
+            $ref: '#/definitions/models.Problem'
+        "500":
+          description: Something went wrong
+          schema:
+            $ref: '#/definitions/models.Problem'
+      summary: Get an ingested article.
+      tags:
+      - articles
+  /sources:
+    get:
+      description: Get every feed the ingestor knows.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Source'
+            type: array
+        "500":
+          description: Something went wrong
+          schema:
+            $ref: '#/definitions/models.Problem'
+      summary: Get all sources.
+      tags:
+      - sources
+    post:
+      consumes:
+      - application/json
+      description: Add a feed to poll.
+      parameters:
+      - description: The source
+        in: body
+        name: source
+        required: true
+        schema:
+          $ref: '#/definitions/models.Source'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          headers:
+            Location:
+              description: /sources/{id}
+              type: string
+          schema:
+            $ref: '#/definitions/models.Source'
+        "400":
+          description: Body is not valid JSON
+          schema:
+            $ref: '#/definitions/models.Problem'
+        "409":
+          description: A source with this id already exists
+          schema:
+            $ref: '#/definitions/models.Problem'
+        "422":
+          description: A field is invalid
+          schema:
+            $ref: '#/definitions/models.Problem'
+        "500":
+          description: Something went wrong
+          schema:
+            $ref: '#/definitions/models.Problem'
+      summary: Create a source.
+      tags:
+      - sources
+  /sources/{id}:
+    get:
+      description: Get one feed.
+      parameters:
+      - description: Source id (uuid)
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Source'
+        "404":
+          description: Source not found
+          schema:
+            $ref: '#/definitions/models.Problem'
+        "422":
+          description: A field is invalid
+          schema:
+            $ref: '#/definitions/models.Problem'
+        "500":
+          description: Something went wrong
+          schema:
+            $ref: '#/definitions/models.Problem'
+      summary: Get a source.
+      tags:
+      - sources
+schemes:
+- http
+swagger: "2.0"

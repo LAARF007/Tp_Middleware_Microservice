@@ -1,0 +1,26 @@
+meta {
+  name: POST subscriptions telegram
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{notifier_go}}/subscriptions
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "channel": "telegram",
+    "enabled": true,
+    "include_degraded": true,
+    "label": "Test telegram",
+    "target": "..."
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": "v1",
+  "id": "c8f9be60-4d6b-5295-ba4f-a22582e8dbba",
+  "source_id": "7aca5ede-755a-4db6-88d9-6e7ed916144f",
+  "source_name": "Korben",
+  "url": "https://korben.info/dnsforge-dns-allemand-sans-publicite.html?utm_source=rss&utm_medium=feed&utm_campaign=flux-principal",
+  "canonical_url": "https://korben.info/dnsforge-dns-allemand-sans-publicite.html",
+  "title": "DNSforge - Le DNS qui coupe la pub et le tracking",
+  "author": "Korben ✨",
+  "published_at": "2026-09-04T13:30:00Z",
+  "fetched_at": "2026-09-06T18:40:54Z",
+  "content_excerpt": "Je ne sais pas si vous en avez déjà entendu parler, mais DNSforge est un résolveur DNS allemand qui a une particularité plutôt cool : il refuse de résoudre les noms de domaine qui sont liés à la publicité, au pistage et au malware. Cela veut dire que la pub n'est pas bloquée dans votre navigateur, elle n'arrive tout simplement jamais à lui. En arrivant sur la home de DNSforge, vous pouvez voir quatre portes d'entrée, selon ce que vous voulez laisser passer. En mode normal, c'est le DNS par défaut, avec blocage des pubs, blocage des trackers et blocage des malwares. Cela représente environ 1,4 million de noms de domaine. De son côté, le mode Hard vise les mêmes catégories, mais avec des listes de blocage bien plus agressives, ce qui couvre environ 2,8 millions de noms de domaine et surtout, aucune exception n'est tolérée. Et cela même si cela nécessite de péter des bouts de Facebook. Clean, quant à lui, c'est une version identique au mode normal qui bloque en plus le contenu adulte et les jeux d'argent, ainsi que le mode SafeSearch forcé sur les moteurs de recherche et sur YouTube. C'est pour ça qu'il couvre 8 millions de noms de domaine. Mais ça ne veut pas forcément dire que ça protège mieux que le mode Hard. Quant au mode Blank, c'est un DNS qui n'est pas filtrant, il laisse tout passer. Pour ces listes de blocage, DNS Forge se repose sur des listes tierces rafraîchies chaque nuit, notamment celles de hagezi ou d'oisd. Mais en cas de faux positif, rassurez-vous, vous pouvez toujours signaler ça sur le forum. Après, comme tout ce qui est gratuit, il y a un petit plafond : DNSForge accepte 100 requêtes par tranche de 10 secondes. Et si vous dépassez ce chiffre, c'est que vous bombardez trop le résolveur, et votre adresse IP sera bannie durant 900 secondes. Voilà, ça représente un quart d'heure durant lequel vous n'avez plus accès à aucun site web. Mais bon, si ça vous arrive, il suffit de rebasculer sur un autre DNS et vous êtes tranquille. Après 100 requêtes par tr",
+  "lang": "fr"
+}

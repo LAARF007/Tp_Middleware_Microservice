@@ -1,0 +1,181 @@
+# profiles : prepare (nats, mailpit), ollama (Ollama), services (all 5 services)
+#   docker compose --profile prepare up -d 
+#   docker compose --profile services build       
+#   docker compose --profile services up       
+#   docker compose --profile services down
+
+# specifics for ollama:  
+#   docker compose exec ollama ollama pull llama3.2:1b
+
+services:
+  nats:
+    image: nats:2.15-alpine3.22
+    container_name: edu-veille-nats
+    profiles: ["prepare"]
+    command: ["-js", "-sd", "/data", "-m", "8222"]   # -js enables JetStream, -m the monitoring endpoint
+    ports:
+      - "4222:4222"     # clients
+      - "8222:8222"     # http monitoring (http://localhost:8222/varz , /jsz)
+    volumes:
+      - edu_veille_nats_data:/data
+    networks:
+      - edu_veille_network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-S", "-O", "/dev/null", "http://localhost:8222/healthz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: edu-veille-mailpit
+    profiles: ["prepare"]
+    command: ["--smtp-disable-rdns"] # reverse dns disabled as we're in local
+    ports:
+      - "1025:1025"     # SMTP server
+      - "8025:8025"     # UI & API (/api/v1/messages)
+    networks:
+      - edu_veille_network
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: edu-veille-ollama
+    profiles: ["ollama"]
+    ports:
+      - "11434:11434"
+    volumes:
+      - edu_veille_ollama_models:/root/.ollama
+    networks:
+      - edu_veille_network
+    environment:
+      # Keep the model resident between messages. Without this, Ollama unloads it after 5
+      # minutes and the next article pays the full load cost again 
+      OLLAMA_KEEP_ALIVE: "30m"
+      # One request at a time. A laptop cannot usefully run two inferences in parallel,
+      # and serialising here makes latency predictable instead of catastrophic.
+      OLLAMA_NUM_PARALLEL: "1"
+      OLLAMA_MAX_LOADED_MODELS: "1"
+
+  ingestor:
+    image: edu_veille_ingestor
+    build: 
+      context: project/1_ingestor
+      dockerfile: build/Dockerfile
+    container_name: edu-veille-ingestor
+    profiles: [ "services" ]
+    ports:
+      - "8081:8080"   
+    networks:
+      - edu_veille_network
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-S", "-O", "/dev/null", "http://localhost:8080/sources"] 
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    environment:
+      NATS_URL: nats://edu-veille-nats:4222
+
+  analyzer:
+    image: edu_veille_analyzer
+    build:
+      context: project/2_analyzer2
+      dockerfile: build/Dockerfile
+    container_name: edu-veille-analyzer
+    profiles: [ "services" ]
+    networks:
+      - edu_veille_network
+    environment:
+      NATS_URL: nats://edu-veille-nats:4222
+      ANALYZER_BACKEND: openai
+      REMOTE_API_KEY_FILE: /run/secrets/remote_api_key
+    secrets:
+      - remote_api_key
+      
+  publisher:
+    image: edu_veille_publisher
+    build:
+      context: project/3_publisher
+      dockerfile: build/Dockerfile
+    container_name: edu-veille-publisher
+    profiles: [ "services" ]
+    ports:
+      - "8083:8081"
+    networks:
+      - edu_veille_network
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-S", "-O", "/dev/null", "http://localhost:8081/articles" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    environment:
+      NATS_URL: nats://edu-veille-nats:4222
+      
+  notifier_go:
+    image: edu_veille_notifier_go
+    build:
+      context: project/4_notifier/go
+      dockerfile: build/Dockerfile
+    container_name: edu-veille-notifier-go
+    profiles: [ "services" ]
+    ports:
+      - "8084:8083"
+    networks:
+      - edu_veille_network
+    volumes:
+      - edu_veille_notifier_go_data:/data
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-S", "-O", "/dev/null", "http://localhost:8083/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    environment:
+      NATS_URL: nats://edu-veille-nats:4222
+      TELEGRAM_BOT_TOKEN_FILE: /run/secrets/telegram_bot_token
+      SMTP_HOST: edu-veille-mailpit
+    secrets:
+      - telegram_bot_token
+        
+  notifier_js:
+    image: edu_veille_notifier_js
+    build:
+      context: project/4_notifier/js
+      dockerfile: build/Dockerfile
+    container_name: edu-veille-notifier-js
+    profiles: [ "services" ]
+    ports:
+      - "8085:8083"
+    networks:
+      - edu_veille_network
+    volumes:
+      - edu_veille_notifier_js_data:/data
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "-S", "-O", "/dev/null", "http://localhost:8083/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    environment:
+      NATS_URL: nats://edu-veille-nats:4222
+      TELEGRAM_BOT_TOKEN_FILE: /run/secrets/telegram_bot_token
+      SMTP_HOST: edu-veille-mailpit
+    secrets:
+      - telegram_bot_token
+      
+volumes:
+  edu_veille_nats_data:
+  edu_veille_ollama_models:
+  edu_veille_notifier_go_data:
+  edu_veille_notifier_js_data:
+
+networks:
+  edu_veille_network:
+
+secrets:
+  remote_api_key:
+      file: ~/.config/veille-bench/remote_api_key
+  telegram_bot_token:
+    file: ~/.config/veille-bench/telegram_bot_token 
